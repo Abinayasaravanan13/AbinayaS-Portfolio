@@ -743,7 +743,7 @@
   <p>Built for GitHub Pages</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   const sections = ['hero','about','skills','tools','vision','philosophy','conversion','experience','contact'];
   const navLinks = document.querySelectorAll('.nav-links a');
   const siDots   = document.querySelectorAll('.si-dot');
@@ -752,17 +752,42 @@
   function onScroll() {
     const scrolled = window.scrollY;
     const total = document.body.scrollHeight - window.innerHeight;
-    scrollBar.style.width = (scrolled / total * 100) + '%';
+    if (total > 0) scrollBar.style.width = (scrolled / total * 100) + '%';
 
     let current = 'hero';
-    sections.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) current = id;
+    sections.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) {
+        current = id;
+      }
     });
 
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    navLinks.forEach(function(a) {
+      if (a.getAttribute('href') === '#' + current) {
+        a.classList.add('active');
+      } else {
+        a.classList.remove('active');
+      }
     });
 
-    siDots.forEach(dot => {
-      dot.classList.toggle('active', dot.dataset.tar
+    siDots.forEach(function(dot) {
+      if (dot.dataset.target === current) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+
+  siDots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({behavior: 'smooth'});
+    });
+  });
+
+  window.addEventListener('scroll', onScroll, {passive: true});
+  onScroll();
+</script>
+</body>
+</html>
